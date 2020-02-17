@@ -12,8 +12,6 @@
 #profit (silver calculation for items in inventory)
 #downgrade service 15 > 14
 
-#webapp using Flask
-
 #accesory
 #blackstar
 #bossarmor
@@ -23,10 +21,6 @@ import random
 import csv
 import pandas as pd
 
-from flask import Flask
-from flask import render_template, request
-
-
 failstack = 0 # get when you fail. high failstack increases the chance for successful enhancement
 blackstone_armor = 0 # spend 1 to enhance armor 14
 blackstone_weapon = 0 # spend 1 to enhance weapon 14
@@ -35,7 +29,6 @@ conc_weapon = 0 # spend 1 to enhance weapon 15+
 reblath = 0 # use to repair item reblath
 memory_fragment = 0 # use to repair item
 downgrade_service = 0 # from 15 to 14
-
 
 '''
 re = pd.read_csv('armor.csv')
@@ -115,7 +108,6 @@ def getPrice(df, item):
     return df.loc[item, 'price']
 
 def getLoss():
-
   df = pd.read_csv('price.csv', index_col = 'name')
   #print(df[0][1])
   #print(df[0,1])
@@ -134,7 +126,6 @@ def getLoss():
   return loss
 
 def getProfit(items):
-
   df = pd.read_csv('price.csv', index_col = 'name')
   profit = 0
   for item in items:
@@ -142,9 +133,7 @@ def getProfit(items):
     #print(profit)
   return profit
 
-
 def printSilver(items):
-
   profit = getProfit(items)
   loss = getLoss()
   net = profit - loss
@@ -163,14 +152,10 @@ class Target():
   global reblath
   global memory_fragment
 
-  def __init__(self, ind, ty, le, dr):
-    self.index = int(ind)
+  def __init__(self, ty, le, dr):
     self.type = ty
     self.level = int(le)
     self.durability = int(dr)
-
-  def getIndex(self):
-    return self.index
 
   def name(self):
     name = self.type + ' ' + str(self.level)
@@ -286,43 +271,16 @@ items.append(d)
 for i in items:
   print(i)
 '''
-# create list of items (inventory)
+
+
+
 items = []
+
 with open('items.csv', 'r') as f:
     reader = csv.reader(f)
     for row in reader:
-        items.append(Target(row[0], row[1], row[2], row[3]))
+        items.append(Target(row[0], row[1], row[2]))
         #print(isinstance(row[0], str))
-
-
-app = Flask(__name__)
-
-@app.route('/')
-def webapp():
-    loss = getLoss()
-    profit = getProfit(items)
-    net = profit - loss
-    values = {"failstack": failstack, "blackstone_armor": blackstone_armor, "blackstone_weapon": blackstone_weapon, "conc_armor": conc_armor, "conc_weapon": conc_weapon, "reblath": reblath, "memory_fragment": memory_fragment, "downgrade_service": downgrade_service, "profit": '{:,}'.format(profit), "loss": '{:,}'.format(loss), "net": '{:,}'.format(net)}
-    item_names = []
-    for item in items:
-      item_names.append(str(item.getIndex()) + ' ' + item.name() + ' ' + str(item.getDurability()) + ' ' + str(item.rate()) + '%')
-    return render_template('index.html', values = values, item_names = item_names)
-
-@app.route('/hit',methods=['post'])
-def post():
-  index = int(request.form["number"])
-  hit(items[index])
-  return webapp()
-
-@app.route('/repair',methods=['post'])
-def repairWeb():
-  repairAll(items)
-  return webapp()
-
-if __name__ == '__main__':
-    app.run()
-
-
 
 while 1 == 1:
   printItems(items)

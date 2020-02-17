@@ -1,0 +1,57 @@
+<!doctype html>
+<title>Black desert online enhancing simulator</title>
+<head>
+</head>
+<body>
+<div "content_container">
+<h1>Black Desert Online Enhance Simulator</h3>
+<table border="3">
+	<tr valign="top">
+	<td>
+		<h2>Values / Net : {{ values.net }}</h2>
+		<p> failstack : {{ values.failstack }}</p>
+		<form action="/hit" method="POST">
+		<input type="number" name="number" value="type number here">
+        	<input type="submit" value="Hit">
+    		</form>
+		<form action="/repair" method="POST">
+		<input type="submit" value="Repair All">
+		</form>
+	</td>
+	<td>
+                <h2>item spent / loss : {{ values.loss }}</h2>
+		<p> blackstone armor : {{ values.blackstone_armor }} </p>
+		<p> blackstone weapon : {{ values.blackstone_weapon }} </p>
+		<p> concentrated magical blackstone armor : {{ values.conc_armor }} </p>
+		<p> concentrated magical blackstone weapon : {{ values.conc_weapon }} </p>
+		<p> reblath : {{ values.reblath }} </p>
+		<p> memory fragment : {{ values.memory_fragment }} </p>
+		<p> downgrade service : {{ values.downgrade_service }} </p>
+	</td>
+	<td>
+                <h2>Inventory / profit : {{ values.profit }}</h2>
+		<p>name / level / durability / success rate</p>
+		{% for item in item_names %}
+		<p>
+		{{item}}
+		</p>
+		{% endfor %}
+	</td>
+	<td>
+		<h2>Rule</h2>
+		<p>1. pick an item in your inventory and click hit. </p>
+		<p>2. when you hit, you use a stone. blackstone armor for reblath < 15, concentrated blackstone armor for reblath > 15, concentrated weapon for dande > 15.</p>
+		<p>3. when it succeeds, item's level will get +1 and failstack becomes 0.</p>
+		<p>3. when it fails, item's level will get -1 (if the level is above 16), durability decreases. and you get failstack.</p>
+		<p>4. failstack increases the chance to succeed.</p>
+		<p>5. when item durability is 0, you need to repair it. repairing reblath uses reblath (1 for 10 dura) and dande uses memory fragment (1 for 1 dura).</p>
+		<p>6. when reblath hits level 15, it automatically downgrades to level 14. (success rate for level 14 is lower than level 15 so it is good to build failstack)</p>
+                <p>7. reblath is cheap, dande is expensive. try to make dande 19 or 20 by building high stack and gain profit</p> 
+   
+	</tr>
+</table>
+</div>
+</body>
+</html>
+		
+	
